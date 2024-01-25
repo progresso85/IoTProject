@@ -1,83 +1,62 @@
-import { StatusBar } from "expo-status-bar";
-import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import Sound from 'react-native-sound';
 
-export default function App() {
-  const [inputText, setInputText] = useState("");
+const App = () => {
+  const [inputText, setInputText] = useState('');
+
+  // Chargez le son lors du montage du composant
+  const sound = new Sound('your_sound_file.mp3', Sound.MAIN_BUNDLE, (error) => {
+    if (error) {
+      console.error('Impossible de charger le son', error);
+    }
+  });
+
+  // Fonction pour jouer le son
+  const playSound = () => {
+    // Rembobinez le son au début avant de le jouer
+    sound.stop(() => sound.play());
+  };
 
   return (
     <View style={styles.container}>
-      {/* Champ de texte */}
       <TextInput
         style={styles.input}
         placeholder="Entrez votre message"
         onChangeText={(text) => setInputText(text)}
         value={inputText}
       />
-
-      {/* Boutons alignés à gauche et à droite */}
+      <Text>{`Bonjour ${inputText} !`}</Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, styles.yesButton]} onPress={() => console.log("Yes pressed")}>
-          <Text style={styles.buttonText}>Yes</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.noButton]} onPress={() => console.log("No pressed")}>
-          <Text style={styles.buttonText}>No</Text>
-        </TouchableOpacity>
+        <Button title="Yes" onPress={playSound} />
+        <Button title="No" />
       </View>
-
-      {/* Image en-dessous des boutons */}
-      <Image
-        source={require("./assets/Code_Morse.webp")}
-        style={styles.image}
-      />
-
-      <StatusBar style="auto" />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "flex-start",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     paddingTop: 50,
   },
   input: {
     height: 40,
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     paddingRight: 10,
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "80%",
-    marginBottom: 20,
-  },
-  button: {
-    width: "45%",
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  yesButton: {
-    backgroundColor: "green",
-  },
-  noButton: {
-    backgroundColor: "red",
-  },
-  image: {
-    width: 300,
-    height: 300,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
     marginTop: 20,
   },
 });
+
+export default App;
