@@ -1,9 +1,38 @@
+<<<<<<< Updated upstream
 import { StatusBar } from 'expo-status-bar';
 import { Button, Image, StyleSheet, Text, TextInput, View } from 'react-native';
 import React, { useState } from 'react';
 
 export default function App() {
   const [inputText, setInputText] = useState('');
+=======
+import { StatusBar } from "expo-status-bar";
+import { Image, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Audio } from 'expo-av';
+import { TouchableOpacity } from 'react-native';
+//import { Client, Message } from 'react-native-mqtt';
+
+export default function App() {
+  const [inputText, setInputText] = useState("");
+  let soundObject;
+
+  const play = async (duration) => {
+    soundObject = new Audio.Sound();
+
+    try {
+      await soundObject.loadAsync(require('./assets/Tuning_Note_D.mp3'));
+      await soundObject.playAsync();
+
+      // Attendre la durée spécifiée avant de décharger le son
+      setTimeout(async () => {
+        await soundObject.unloadAsync();
+      }, duration * 1000);
+    } catch (error) {
+      console.error("Erreur de chargement du son:", error);
+    }
+  }
+>>>>>>> Stashed changes
 
   return (
     <View style={styles.container}>
@@ -35,6 +64,7 @@ export default function App() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -63,6 +93,9 @@ const styles = StyleSheet.create({
     marginTop: 20,  // Ajustez la marge pour déplacer l'image plus bas
   },
 });
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
