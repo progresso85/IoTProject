@@ -9,17 +9,17 @@ export default function App() {
   const [inputText, setInputText] = useState("");
   let soundObject;
 
-  const play = async () => {
+  const play = async (duration) => {
     soundObject = new Audio.Sound();
 
     try {
       await soundObject.loadAsync(require('./assets/Tuning_Note_D.mp3'));
       await soundObject.playAsync();
-      
-      // Attendez 5 secondes (5000 millisecondes) avant d'unloadAsync
+
+      // Attendre la durée spécifiée avant de décharger le son
       setTimeout(async () => {
         await soundObject.unloadAsync();
-      }, 1000);
+      }, duration * 1000);
     } catch (error) {
       console.error("Erreur de chargement du son:", error);
     }
@@ -34,13 +34,12 @@ export default function App() {
         onChangeText={(text) => setInputText(text)}
         value={inputText}
       />
-      {/* <AudioPlayer /> */}
       {/* Boutons alignés à gauche et à droite */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, styles.yesButton]} onPress={() => play()}>
+        <TouchableOpacity style={[styles.button, styles.yesButton]} onPress={() => play(5)}>
           <Text style={styles.buttonText}>Yes</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.noButton]} onPress={() => console.log("No pressed")}>
+        <TouchableOpacity style={[styles.button, styles.noButton]} onPress={() => play(1)}>
           <Text style={styles.buttonText}>No</Text>
         </TouchableOpacity>
       </View>
