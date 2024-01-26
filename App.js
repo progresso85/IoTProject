@@ -3,43 +3,10 @@ import { Image, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Audio } from 'expo-av';
 import { TouchableOpacity } from 'react-native';
-import { Client, Message } from 'react-native-mqtt';
 
 export default function App() {
   const [inputText, setInputText] = useState("");
   let soundObject;
-  let mqttClient;
-
-  useEffect(() => {
-    // Initialiser la connexion MQTT
-    mqttClient = new Client({
-      uri: 'mqtt://mqtt-dashboard.com/',
-      clientId: 'your-client-id', // Remplacez par un identifiant de client unique
-    });
-
-    mqttClient.connect()
-      .then(() => {
-        console.log('Connecté au broker MQTT');
-        // S'abonner au topic "morse"
-        mqttClient.subscribe('morse');
-      })
-      .catch((error) => {
-        console.error('Erreur de connexion MQTT', error);
-      });
-
-    // Gérer les messages MQTT reçus
-    mqttClient.on('message', (message) => {
-      console.log(`Message MQTT reçu: ${message.payloadString}`);
-      // Ajoutez ici le code pour réagir au message reçu
-    });
-
-    // Nettoyage à la fin du composant
-    return () => {
-      if (mqttClient) {
-        mqttClient.disconnect();
-      }
-    };
-  }, []);
 
   const play = async (duration) => {
     soundObject = new Audio.Sound();
@@ -47,10 +14,6 @@ export default function App() {
     try {
       await soundObject.loadAsync(require('./assets/Tuning_Note_D.mp3'));
       await soundObject.playAsync();
-
-      // Publication d'un message MQTT
-      const mqttMessage = new Message('Hello MQTT');
-      await mqttClient.publish('morse', mqttMessage);
 
       // Attendre la durée spécifiée avant de décharger le son
       setTimeout(async () => {
@@ -90,6 +53,7 @@ export default function App() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
