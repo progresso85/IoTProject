@@ -1,9 +1,29 @@
 import { StatusBar } from "expo-status-bar";
-import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
+import { Audio } from 'expo-av';
+import { TouchableOpacity } from 'react-native';
+// import AudioPlayer from "./audio.js";
 
 export default function App() {
   const [inputText, setInputText] = useState("");
+  let soundObject;
+
+  const play = async () => {
+    soundObject = new Audio.Sound();
+
+    try {
+      await soundObject.loadAsync(require('./assets/Tuning_Note_D.mp3'));
+      await soundObject.playAsync();
+      
+      // Attendez 5 secondes (5000 millisecondes) avant d'unloadAsync
+      setTimeout(async () => {
+        await soundObject.unloadAsync();
+      }, 1000);
+    } catch (error) {
+      console.error("Erreur de chargement du son:", error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -14,10 +34,10 @@ export default function App() {
         onChangeText={(text) => setInputText(text)}
         value={inputText}
       />
-
+      {/* <AudioPlayer /> */}
       {/* Boutons alignés à gauche et à droite */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, styles.yesButton]} onPress={() => console.log("Yes pressed")}>
+        <TouchableOpacity style={[styles.button, styles.yesButton]} onPress={() => play()}>
           <Text style={styles.buttonText}>Yes</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.noButton]} onPress={() => console.log("No pressed")}>
@@ -35,6 +55,7 @@ export default function App() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
